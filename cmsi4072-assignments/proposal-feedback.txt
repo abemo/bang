@@ -1,0 +1,39 @@
+
+
+Evaluation and Feedback
+CMSI 4072 project ~ Spring 2024
+Natalie Lau
+BANG! Computer Language project
+==============================
+
+Proposal Document:
+------------------
+   Nice work on the document.  Very complete in its explanation and where
+   you got the idea.  This is the most computer science-y of all of the
+   projects this semester!  VERY exciting.
+
+   The justification section is also well done, specifying very specifically
+   what knowledge you are pulling from to create the project.  It's also
+   nice to see the self-reflection that you exhibit when stating that you do
+   want to add things that you weren't able to finish last semester for the
+   reasons you state.
+
+   Very well done document overall, plus, I learned about 'code golf' and I
+   like that you put in the example of left associativity and how it gives
+   different results in different languages!
+
+Proposal Presentation:
+----------------------
+   Good job on the presentation!  I'm sorry there weren't more questions for
+   you about this engaging project.  Perhaps your project is a little bit too
+   technical for some of the audience to really appreciate what you are
+   doing, but that's on THEM not on YOU.  Your slides were great, and your
+   presentation style/manner were spot-on.  You explained everything very
+   well.
+
+   Great job overall!
+
+=============================================================================
+your score:  5% out of 5% which is an A-plus
+
+Great job on this presentation and proposal and great start to the semester!

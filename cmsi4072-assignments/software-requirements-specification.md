@@ -17,6 +17,15 @@ The remainder of this document is structured as follows. [Section 5.2](#func-req
 ## <a name="func-reqs" id="func-reqs"></a> 5.2 Functional Requirements
 The interpreter for _Bang!_ is divided into a few components: the [lexer](#lexer), which groups symbols into tokens; the [parser](#parser), which groups tokens into sentences; the [analyzer](#analyzer), which adds contextual meaning to the abstract syntax tree; the [optimizer](#optimizer), which performs optimizations to decrease the interpreter's runtime; and the [interpreter](#interpreter), which runs the script and produces any necessary output.
 
+### <a name="lexer" id="lexer"></a> 5.2.1 Lexer
+The lexer groups symbols (i.e. characters) into tokens that can be passed to the [parser](#parser) (the next step of the interpreter). The following requirements are levied on the lexer.
+
+5.2.1.1 The lexer shall take a string as input to parse.
+
+5.2.1.2 The lexer shall use regular expressions to group the input into tokens.
+
+5.2.1.3 The lexer shall pass the resulting tokens to the parser as a list of tokens.
+
 <!-- Describe features that completed system can be expected to have. Describe what completed system will do, but without describing how it will be accomplished. Each subsection should describe a single discrete functional requirement w/ a meaningful name.
 All "shall" statements must be numbered.
 No "will" or "should" statements should be numbered.

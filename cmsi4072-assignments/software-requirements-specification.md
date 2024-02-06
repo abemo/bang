@@ -37,6 +37,25 @@ The parser groups the tokens passed from the lexer into sentences and constructs
 
 5.2.2.4 The parser shall pass the resulting AST to the analyzer.
 
+### <a name="analyzer" id="analyzer"></a> 5.2.3 Analyzer
+The analyzer adds contextual meaning to the abstract syntax tree (AST) passed from the parser.
+
+5.2.3.1 The analyzer shall receive the AST from the parser as input.
+
+5.2.3.2 The analyzer shall decorate the AST with potential data types.
+
+5.2.3.3 The analyzer shall unroll syntactic sugar into the lengthier equivalent.
+
+5.2.3.4 The analyzer shall track what variables are in scope.
+
+5.2.3.5 The analyzer shall link references to already declared variables to the object in context.
+
+5.2.3.6 The analyzer shall throw an error when `const` variables aren't initialized to an explicit value.
+
+5.2.3.7 The analyzer shall throw an error when `break` is used outside of a loop.
+
+5.2.3.8 The analyzer shall pass the decorated AST to the optimizer.
+
 <!-- Describe features that completed system can be expected to have. Describe what completed system will do, but without describing how it will be accomplished. Each subsection should describe a single discrete functional requirement w/ a meaningful name.
 All "shall" statements must be numbered.
 No "will" or "should" statements should be numbered.

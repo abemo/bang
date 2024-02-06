@@ -67,6 +67,8 @@ The optimizer performs optimizations that decrease the overall runtime of the in
 
 5.2.4.4 The optimizer shall delete dead code.
 
+5.2.4.5 The optimizer shall pass the optimized, decorated AST to the interpreter.
+
 <!-- Describe features that completed system can be expected to have. Describe what completed system will do, but without describing how it will be accomplished. Each subsection should describe a single discrete functional requirement w/ a meaningful name.
 All "shall" statements must be numbered.
 No "will" or "should" statements should be numbered.

@@ -56,6 +56,17 @@ The analyzer adds contextual meaning to the abstract syntax tree (AST) passed fr
 
 5.2.3.8 The analyzer shall pass the decorated AST to the optimizer.
 
+### <a name="optimizer" id="optimizer"></a> 5.2.4 Optimizer
+The optimizer performs optimizations that decrease the overall runtime of the interpreter.
+
+5.2.4.1 The optimizer shall receive the decorated AST from the analyzer as input.
+
+5.2.4.2 The optimizer shall unroll loops with a set number of iterations.
+
+5.2.4.3 The optimizer shall perform constant folding on numbers.
+
+5.2.4.4 The optimizer shall delete dead code.
+
 <!-- Describe features that completed system can be expected to have. Describe what completed system will do, but without describing how it will be accomplished. Each subsection should describe a single discrete functional requirement w/ a meaningful name.
 All "shall" statements must be numbered.
 No "will" or "should" statements should be numbered.

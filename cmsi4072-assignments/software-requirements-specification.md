@@ -75,13 +75,3 @@ The interpreter parses the optimized, decorated AST passed from the optimizer an
 5.2.5.1 The interpreter shall receive the optimized, decorated AST from the optimizer.
 
 5.2.5.2 The interpreter shall produce any output that should be printed by the inputted script.
-
-<!-- Describe features that completed system can be expected to have. Describe what completed system will do, but without describing how it will be accomplished. Each subsection should describe a single discrete functional requirement w/ a meaningful name.
-All "shall" statements must be numbered.
-No "will" or "should" statements should be numbered.
-No "and" (that should be two statements).
-"Will" and "should" statements MUST be associated with a requirement statement. The requirement statement should immediately precede the "will" or "should" statment in this case.
-There can be more than one "will" or "should" statment associated with any "shall" statement.
-When specifying performance requirements, be careful about specifying ranges of performance measures. They may come back to bite you in the end.
-Try to write your requirements so they are testable statements.
-Watch out for "weasel words" (ambiguous words) -->

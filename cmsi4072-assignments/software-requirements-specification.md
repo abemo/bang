@@ -26,6 +26,17 @@ The lexer groups symbols (i.e. characters) into tokens that can be passed to the
 
 5.2.1.3 The lexer shall pass the resulting tokens to the parser as a list of tokens.
 
+### <a name="parser" id="parser"></a> 5.2.2 Parser
+The parser groups the tokens passed from the lexer into sentences and constructs the abstract syntax tree (AST) from the resulting sentences.
+
+5.2.2.1 The parser shall read the tokens passed from the lexer as input.
+
+5.2.2.2 The parser shall group tokens into sentences.
+
+5.2.2.3 The parser shall connect the AST as sentences are formed.
+
+5.2.2.4 The parser shall pass the resulting AST to the analyzer.
+
 <!-- Describe features that completed system can be expected to have. Describe what completed system will do, but without describing how it will be accomplished. Each subsection should describe a single discrete functional requirement w/ a meaningful name.
 All "shall" statements must be numbered.
 No "will" or "should" statements should be numbered.

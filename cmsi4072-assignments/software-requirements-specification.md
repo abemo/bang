@@ -1,7 +1,7 @@
 # Table of Contents
 5.1 [Introduction](#introduction)
 
-<!-- 5.2 [Functional Requirements](#func-reqs) -->
+5.2 [Functional Requirements](#func-reqs)
 
 # Requirements
 
@@ -14,8 +14,10 @@ Below is a UML State Diagram depicting the order of the components in the interp
 
 The remainder of this document is structured as follows. [Section 5.2](#func-reqs) contains the functional requirements, which describe what the completed interpreter can be expected to have. [Section 5.3](#perform-reqs) contains the performance requirements, which include requirements regarding runtime. [Section 5.4](#env-reqs) contains the environment requirements, which lists any additional software requirements the user needs to have installed.
 
-<!-- ## <a name="func-reqs" id="func-reqs"></a> 5.2 Functional Requirements
-Describe features that completed system can be expected to have. Describe what completed system will do, but without describing how it will be accomplished. Each subsection should describe a single discrete functional requirement w/ a meaningful name.
+## <a name="func-reqs" id="func-reqs"></a> 5.2 Functional Requirements
+The interpreter for _Bang!_ is divided into a few components: the [lexer](#lexer), which groups symbols into tokens; the [parser](#parser), which groups tokens into sentences; the [analyzer](#analyzer), which adds contextual meaning to the abstract syntax tree; the [optimizer](#optimizer), which performs optimizations to decrease the interpreter's runtime; and the [interpreter](#interpreter), which runs the script and produces any necessary output.
+
+<!-- Describe features that completed system can be expected to have. Describe what completed system will do, but without describing how it will be accomplished. Each subsection should describe a single discrete functional requirement w/ a meaningful name.
 All "shall" statements must be numbered.
 No "will" or "should" statements should be numbered.
 No "and" (that should be two statements).

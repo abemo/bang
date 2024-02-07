@@ -1,0 +1,44 @@
+
+
+Evaluation for homework #1
+CMSI 4072 ~~ Spring 2024
+====================================
+
+1.1 basic tasks; there are 8 in the book
+      of which 5 are most important             8 of 8 points
+1.2 descriptions                                8 of 8 points
+2.4 google docs [gimme, accept anything]        1 of 1 point
+2.5 JBGE                                        1 of 1 point
+4.2 critical path [3], total time [2]           5 of 5 points
+4.4 Gantt chart [4], finish date [1]            5 of 5 points
+4.6 deus ex machina                             1 of 1 point
+4.8 biggest mistakes                            2 of 2 points
+5.1 five characteristics of good req'ts         1 of 1 point
+5.3 TimeShifter req'ts categorizations          5 of 5 points
+5.9 MoSCoW for Mr. Bones                        3 of 3 points
+
+
+Total possible score: 40 points
+
+EVALUATION
+============================================================================
+Your score: 40 out of 40 = 100% which is an A-plus
+
+Comments:
+---------
+
+problem 5.3 although a good case could be made for your selections, actually
+   the options should be categorized as:
+      User: b, c, d, l, m, n, o, p
+      Business: a
+      Functional: b, c, d, j, k, l, m, n, o, p
+      Non-functional: e, f, g, h, i
+      Implementation: empty
+
+problem 5.9 I like the should requirements ~ the logic games I play have the
+   same statistics you have mentioned and it adds a lot to see how I'm doing
+   as well as to keep me playing "just one more round" to see if I can beat
+   my score.
+
+Good job on this you two, and keep up the good work!
+

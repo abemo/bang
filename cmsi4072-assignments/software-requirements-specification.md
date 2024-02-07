@@ -2,12 +2,18 @@
 5.1 [Introduction](#introduction)
 
 5.2 [Functional Requirements](#func-reqs)
-<!-- TODO link subsections -->
+<br/>&emsp;&nbsp;&nbsp;&nbsp;5.2.1 [Lexer](#lexer)
+<br/>&emsp;&nbsp;&nbsp;&nbsp;5.2.2 [Parser](#parser)
+<br/>&emsp;&nbsp;&nbsp;&nbsp;5.2.3 [Analyzer](#analyzer)
+<br/>&emsp;&nbsp;&nbsp;&nbsp;5.2.4 [Optimizer](#optimizer)
+<br/>&emsp;&nbsp;&nbsp;&nbsp;5.2.5 [Interpreter](#interpreter)
 
 5.3 [Performance Requirements](#perform-reqs)
-<!-- TODO link subsections -->
+<br/>&emsp;&nbsp;&nbsp;&nbsp;5.3.1 [Consistency](#consistency)
 
 5.4 [Environment Requirements](#env-reqs)
+
+---
 
 # Requirements
 
@@ -19,6 +25,8 @@ Below is a UML State Diagram depicting the order of the components in the interp
 ![UML State Diagram](./uml-state-diagram.jpeg)
 
 The remainder of this document is structured as follows. [Section 5.2](#func-reqs) contains the functional requirements, which describe what the completed interpreter can be expected to have. [Section 5.3](#perform-reqs) contains the performance requirements, which include requirements regarding runtime. [Section 5.4](#env-reqs) contains the environment requirements, which lists any additional software requirements the user needs to have installed.
+
+---
 
 ## <a name="func-reqs" id="func-reqs"/> 5.2 Functional Requirements
 The interpreter for _Bang!_ is divided into a few components: the [lexer](#lexer), which groups symbols into tokens; the [parser](#parser), which groups tokens into sentences; the [analyzer](#analyzer), which adds contextual meaning to the abstract syntax tree; the [optimizer](#optimizer), which performs optimizations to decrease the interpreter's runtime; and the [interpreter](#interpreter), which runs the script and produces any necessary output.
@@ -88,6 +96,8 @@ The interpreter parses the optimized, decorated AST passed from the [optimizer](
 
 5.2.5.2 The interpreter shall produce any output that should be printed by the inputted script.
 
+---
+
 ## <a name="perform-reqs" id="perform-reqs"/> 5.3 Performance Requirements
 
 ### <a name="consistency" id="consistency"/> 5.3.1 Consistency
@@ -95,6 +105,8 @@ The interpreter parses the optimized, decorated AST passed from the [optimizer](
 5.3.1.1 The language shall be deterministic.
 <br/>&emsp;&emsp;&emsp;&nbsp;&nbsp;The language should produce the same output for the multiple runs of the same operation.
 <br/>&emsp;&emsp;&emsp;&nbsp;&nbsp;The language should produce the same data type as output for multiple expressions using the same data types and operator.
+
+---
 
 ## <a name="env-reqs" id="env-reqs"/> 5.4 Environment Requirements
 _Bang!_ has no specific operating system required. The environment requirements a _Bang!_ developer will need are as follows:

@@ -7,6 +7,8 @@
 5.3 [Performance Requirements](#perform-reqs)
 <!-- TODO link subsections -->
 
+5.4 [Environment Requirements](#env-reqs)
+
 # Requirements
 
 ## <a name="introduction" id="introduction"/> 5.1 Introduction
@@ -93,3 +95,11 @@ The interpreter parses the optimized, decorated AST passed from the [optimizer](
 5.3.1.1 The language shall be deterministic.
 <br/>&emsp;&emsp;&emsp;&nbsp;&nbsp;The language should produce the same output for the multiple runs of the same operation.
 <br/>&emsp;&emsp;&emsp;&nbsp;&nbsp;The language should produce the same data type as output for multiple expressions using the same data types and operator.
+
+## <a name="env-reqs" id="env-reqs"/> 5.4 Environment Requirements
+_Bang!_ has no specific operating system required. The environment requirements a _Bang!_ developer will need are as follows:
+
+- A machine with access to the command line
+- Some kind of text editor to write _Bang!_ scripts on
+- Yarn
+- TypeScript

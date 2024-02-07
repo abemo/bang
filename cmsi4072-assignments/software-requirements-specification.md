@@ -3,6 +3,8 @@
 
 5.2 [Functional Requirements](#func-reqs)
 
+5.3 [Performance Requirements](#perform-reqs)
+
 # Requirements
 
 ## <a name="introduction" id="introduction"/> 5.1 Introduction
@@ -82,4 +84,4 @@ The interpreter parses the optimized, decorated AST passed from the [optimizer](
 
 5.2.5.2 The interpreter shall produce any output that should be printed by the inputted script.
 
-<!-- ## <a name="perform-reqs" id="perform-reqs"></a> 5.3 Performance Requirements -->
+## <a name="perform-reqs" id="perform-reqs"/> 5.3 Performance Requirements

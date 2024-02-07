@@ -2,8 +2,10 @@
 5.1 [Introduction](#introduction)
 
 5.2 [Functional Requirements](#func-reqs)
+<!-- TODO link subsections -->
 
 5.3 [Performance Requirements](#perform-reqs)
+<!-- TODO link subsections -->
 
 # Requirements
 
@@ -85,3 +87,9 @@ The interpreter parses the optimized, decorated AST passed from the [optimizer](
 5.2.5.2 The interpreter shall produce any output that should be printed by the inputted script.
 
 ## <a name="perform-reqs" id="perform-reqs"/> 5.3 Performance Requirements
+
+### <a name="consistency" id="consistency"/> 5.3.1 Consistency
+
+5.3.1.1 The language shall be deterministic.
+<br/>&emsp;&emsp;&emsp;&nbsp;&nbsp;The language should produce the same output for the multiple runs of the same operation.
+<br/>&emsp;&emsp;&emsp;&nbsp;&nbsp;The language should produce the same data type as output for multiple expressions using the same data types and operator.

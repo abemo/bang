@@ -1,0 +1,31 @@
+
+
+Evaluation and Feedback
+CMSI 4072 project ~ Spring 2024
+Natalie Lau
+BANG! Computer Language project
+==============================
+
+Software Requirements Specification Document:
+---------------------------------------------
+-- Introduction Section
+   Perfect.  Nothing to add here.
+
+-- Functional Requirements
+   Perfect.  Nothing to add here, either.
+
+-- Performance Requirements
+   Perfect.  Nothing to add here, either.
+
+
+-- Environment Requirements
+   Perfect.  Nothing to add here, either.
+
+
+=============================================================================
+your score:  10% out of 10% which is an A-plus
+
+All in all, this is CRAZY good, Natilie!
+
+You have the full 10% on this deliverable.  Good work!
+

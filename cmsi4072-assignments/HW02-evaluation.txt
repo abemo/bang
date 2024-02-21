@@ -1,0 +1,47 @@
+
+Evaluation and Feedback
+CMSI 4072 project ~ Spring 2024
+Natalie Lau
+BANG! Computer Language project
+Evaluation for homework02
+===============================
+
+5-1 component-based vs service-oriented             5 of  5 points
+5-2 most appropriate architecture for tictactoe     5 of  5 points
+5-4 internet chess appropriate architecture         5 of  5 points
+5-6 database for ClassyDraw                         5 of  5 points
+5-8 state machine diagram for floats               10 of 10 points
+6-1 compare/contrast ClassyDraw subclasses         10 of 10 points
+6-2 inheritance diagram from 6-1                   10 of 10 points
+
+
+Total possible score: 50 points
+
+EVALUATION
+============================================================================
+Your score: 50 out of 50 = 100.0% which is an A-plus
+
+Comments:
+---------
+Nice work on this assignment.  Thanks for letting me know that you and Aidan
+worked together.  I'm glad that you two collaborated and were still able to
+turn in individualized versions!  Excellent!
+
+On 5.2, good point for a rule-based architecture in terms of the game having
+a set of rules that must be followed in order to play.  However, in the case
+of 'architecture', a rule-based system is something different.  It uses sets
+of rules and sets of 'facts' which trigger the rules; this is the kind of an
+architecture you would use for diagnostics like in health care or car repair
+but I'm sure it could be adapted for games.  You bring up a good point and I
+will see about implementing tic-tac-toe as a sample for CMSI 627!
+
+On 5.8, it looks like you have a transition missing.  There's no way to get
+from the "E/e" to a digit without entering a sign but that should still be a
+valid entry.  For example, "1.234e5" is the same as "1.234e+5" and both are
+allowed.
+
+On 6.1, good thinking to include the "LineStyle" property... I don't think
+anyone else thought of using dashed or dotted lines!
+
+Great job, Natalie ~ keep up the good work!!
+

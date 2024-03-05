@@ -83,7 +83,8 @@ export default function parseFile() {
       throw err
     }
 
-    console.log(parse(tokenize(data)))
+    console.log('Parser output:')
+    console.dir(parse(tokenize(data)), { depth: null })
   })
 }
 
@@ -96,7 +97,7 @@ export const parse = (tokens: Token[]) => {
   }
 
   const atAny = (of: string[]) => {
-    return of.some(expected => token?.category === expected)
+    return of.some(expected => token?.category === expected || token?.lexeme === expected)
   }
 
   const lookUntil = (character: string) => {
@@ -118,9 +119,21 @@ export const parse = (tokens: Token[]) => {
   }
 
   const next = () => {
-    token = tokens.shift()
+    const prevToken = tokens.shift()
+    token = tokens[0]
     sourceCode.push(token?.lexeme ?? '')
-    return token
+    return prevToken
+  }
+
+  const skipWhitespace = (skipNewLines: boolean = true) => {
+    while (token?.category === Category.whitespace && (skipNewLines || token?.lexeme !== '\n')) {
+      next()
+    }
+  }
+
+  const prependToTokens = (...toPrepend: Token[]) => {
+    tokens.unshift(...toPrepend)
+    token = tokens[0]
   }
 
   const contains = (tokens: Token[], character: string) => {
@@ -136,12 +149,12 @@ export const parse = (tokens: Token[]) => {
   }
 
   const parseBlock = () => {
-    while (match('\n')) continue
+    skipWhitespace()
 
     const statements: Statement[] = []
     while (tokens.length > 0) {
       statements.push(parseStatement())
-      while (match('\n')) continue
+      skipWhitespace()
     }
 
     return new Block(statements)
@@ -153,22 +166,27 @@ export const parse = (tokens: Token[]) => {
     }
 
     const statementTypes = {
-      [Category.id]: parseAssignment,
+      [Category.id]: parseAssignment, // this could also be a return
       [Category.keyword]: parseKeywordStatement,
       [Category.number]: parseReturnStatement,
       [Category.object]: parseReturnStatement,
       [Category.operator]: parseReturnStatement,
       [Category.structure]: parseLiteralExpression, // TODO should this be a return?
+      [Category.whitespace]: () => error(`Unexpected whitespace`, token?.line ?? 0, token?.column ?? 0),
     }
 
+    skipWhitespace()
     return statementTypes[token.category]()
   }
 
   const parseAssignment = (isLocal = false, isConst = false): Statement => {
     const variable = parseAssignmentTarget(isLocal, isConst)
 
+    skipWhitespace()
+
     let operator, expression
     if ((operator = match(Category.operator, isConst)?.lexeme)) {
+      skipWhitespace()
       expression = parseExpression()
     }
 
@@ -193,12 +211,15 @@ export const parse = (tokens: Token[]) => {
       } else if (structure.lexeme === '[') {
         const left = parseExpression(matchUntil(':')) ?? 0
         next()
+        skipWhitespace()
         const right = parseExpression(matchUntil(']')) ?? Infinity
         next()
 
         return new IndexExpression(variable, left, right)
       }
     }
+    // think this might also catch x -> x?
+    // TODO check for function calls () and repeating . or [] ops
 
     return variable
   }
@@ -209,6 +230,7 @@ export const parse = (tokens: Token[]) => {
       [constKeyword]: () => parseAssignment(false, !!next()),
       [returnKeyword]: () => {
         next()
+        skipWhitespace(false)
         return parseReturnStatement(matchUntil('\n'))
       },
       [breakKeyword]: () => new BreakStatement(),
@@ -227,7 +249,7 @@ export const parse = (tokens: Token[]) => {
         error(`'dft' keyword cannot be used outside of a 'mtch' expression`, token!.line, token!.column)
       },
       nil: () => new ReturnStatement(),
-    }[token!.lexeme]!() // TODO replace the !
+    }[token!.lexeme]!()
   }
 
   const parseReturnStatement = (expression?: Token[]): Statement => {
@@ -244,8 +266,12 @@ export const parse = (tokens: Token[]) => {
       )
     }
 
+    skipWhitespace()
+
     const condition = parseExpression(expression)
     const matchCases: MatchCase[] = []
+
+    skipWhitespace()
 
     let cs = match(caseKeyword, true)
     while (cs) {
@@ -253,10 +279,13 @@ export const parse = (tokens: Token[]) => {
       const caseTestConditions = new ListLiteral([])
 
       while (contains(caseTestCondition, ',')) {
+        skipWhitespace()
         caseTestConditions.value.push(parseExpression(matchUntil(',', caseTestCondition)))
       }
 
+      skipWhitespace()
       const lastCaseTest = parseExpression(caseTestCondition)
+      skipWhitespace()
       const colon = match(':', true)
 
       if (lastCaseTest === nil) {
@@ -265,22 +294,30 @@ export const parse = (tokens: Token[]) => {
 
       caseTestConditions.value.push(lastCaseTest)
 
+      skipWhitespace()
       const openingCsBracket = match('{')
+      skipWhitespace()
       const caseFunction = parseFunctionLiteral(matchUntil('}')) // TODO what if they don't use brackets
       if (openingCsBracket) {
+        skipWhitespace()
         match('}', true)
       }
 
       matchCases.push(new MatchCase(caseTestConditions, caseFunction))
 
+      skipWhitespace()
       cs = match(caseKeyword)
     }
 
     if (match(defaultKeyword)) {
+      skipWhitespace()
       match(':', true)
+      skipWhitespace()
       const openingDefaultBracket = match('{')
+      skipWhitespace()
       const caseFunction = parseFunctionLiteral(matchUntil('}')) // TODO may not use brackets here
       if (openingDefaultBracket) {
+        skipWhitespace()
         match('}', true)
       }
 
@@ -292,8 +329,10 @@ export const parse = (tokens: Token[]) => {
 
   const parseExpression = (expression?: Token[]): Expression | typeof nil => {
     if (expression) {
-      tokens.unshift(...expression)
+      prependToTokens(...expression)
     }
+
+    skipWhitespace()
 
     const left = parseCompareExpression()
     const trueBlock: Statement[] = []
@@ -301,13 +340,17 @@ export const parse = (tokens: Token[]) => {
     const falseBlock = []
     let falseBlockSourceCode: string[] = []
 
+    skipWhitespace()
     sourceCode = trueBlockSourceCode
     while (match('?') && !at(':')) {
+      skipWhitespace()
       trueBlock.push(callFailable(parseImmediateFunction, parseStatement))
     }
 
+    skipWhitespace()
     sourceCode = falseBlockSourceCode
     while (match(':')) {
+      skipWhitespace()
       falseBlock.push(callFailable(parseImmediateFunction, parseStatement))
     }
 
@@ -328,7 +371,9 @@ export const parse = (tokens: Token[]) => {
   ): Expression => {
     let left = parseInnerExpression()
 
+    skipWhitespace()
     while (match(operator)) {
+      skipWhitespace()
       const right = parseInnerExpression()
       left = new expressionType(left, right)
     }
@@ -342,9 +387,13 @@ export const parse = (tokens: Token[]) => {
     expressionType: { new (operands: (Expression | string)[]): NaryExpression }
   ): Expression => {
     const operands: (Expression | string)[] = [parseInnerExpression()]
+    skipWhitespace()
 
     while (atAny(operators)) {
-      operands.push(match(Category.operator, true)!.lexeme, parseInnerExpression())
+      skipWhitespace()
+      const operator = match(Category.operator, true)!.lexeme
+      skipWhitespace()
+      operands.push(operator, parseInnerExpression())
     }
 
     return operands.length > 1 ? new expressionType(operands) : operands[0]
@@ -382,10 +431,13 @@ export const parse = (tokens: Token[]) => {
     let expression
 
     if (match(subtractOperator)) {
+      skipWhitespace()
       expression = new NegativeExpression(parseNegativeOrSpreadExpression())
     } else if (match(negateOperator)) {
+      skipWhitespace()
       expression = new NegationExpression(parseNegativeOrSpreadExpression())
     } else if (match(spreadOperator)) {
+      skipWhitespace()
       expression = new SpreadExpression(parseNegativeOrSpreadExpression())
     }
 
@@ -396,15 +448,19 @@ export const parse = (tokens: Token[]) => {
     let expression
 
     if (match(incrementOperator)) {
+      skipWhitespace()
       expression = new PreIncrementExpression(parseCallOrSelectExpression())
     } else if (match(decrementOperator)) {
+      skipWhitespace()
       expression = new PreDecrementExpression(parseCallOrSelectExpression())
     } else {
       expression = parseCallOrSelectExpression()
 
       if (match(incrementOperator)) {
+        skipWhitespace()
         expression = new PostIncrementExpression(expression)
       } else if (match(decrementOperator)) {
+        skipWhitespace()
         expression = new PostDecrementExpression(expression)
       }
     }
@@ -414,40 +470,50 @@ export const parse = (tokens: Token[]) => {
 
   const parseCallOrSelectExpression = (): Expression => {
     let expression = parseLiteralExpression()
+    skipWhitespace()
 
     while (at('(') || at('[') || at('.')) {
       const operator = next()!.lexeme
+      skipWhitespace()
 
       if (operator === '(') {
         const args: Expression[] = []
 
         while (!at(')')) {
           args.push(parseStatement())
+          skipWhitespace()
         }
 
         match(')', true)
         expression = new CallExpression(expression, args)
       } else if (operator === '[') {
         if (match(':')) {
+          skipWhitespace()
           let rightIndex
 
           if (match(']')) {
+            skipWhitespace()
             rightIndex = Infinity
           } else {
+            skipWhitespace()
             rightIndex = parseStatement()
+            skipWhitespace()
             match(']', true)
           }
 
           expression = new IndexExpression(expression, 0, rightIndex)
         } else {
           const leftIndex = parseStatement()
+          skipWhitespace()
           let rightIndex = null
 
           if (match(':')) {
+            skipWhitespace()
             if (match(']')) {
               rightIndex = Infinity
             } else {
               rightIndex = parseStatement()
+              skipWhitespace()
               match(']', true)
             }
           }
@@ -458,13 +524,61 @@ export const parse = (tokens: Token[]) => {
         const selector = match(Category.id, true)!.lexeme
         expression = new AccessExpression(expression, selector)
       }
+      skipWhitespace()
     }
 
     return expression ?? parseLiteralExpression()
   }
 
   const parseLiteralExpression = (): Expression => {
-    // string
+    switch (token?.category) {
+      case Category.structure: {
+        // structure can be: '"$[]{}\(),?: ->
+        switch (token?.lexeme) {
+          case '"': 
+          case "'": {
+            return parseStringLiteral()
+          }
+          case '$': {
+            return parseFormattedStringLiteral()
+          }
+          case '[': {
+            return parseListLiteral()
+          }
+          case '{': {
+            return callFailable(parseObjectLiteral, parseImmediateFunction)
+          }
+          case '(': {
+            next()
+            skipWhitespace()
+            if (at(')')) {
+              error(`Unexpected token )`, token?.line, token?.column)
+            }
+
+            const exp = parseStatement()
+
+            skipWhitespace()
+            match(')', true)
+
+            return exp
+          }
+          default: {
+            error(`Unexpected token ${token?.lexeme}`, token?.line, token?.column)
+          }
+        }
+
+        // throw new Error('unimplemented object, list, immediate function, or function literal parsing')
+      }
+      case Category.number: {
+        return parseNumberLiteral()
+      }
+      case Category.id: {
+        return parseAssignmentTarget(false, false)
+      }
+
+    }
+    // TODO: what if I just try/catch every single one
+    // string (structure with ids inside)
     // number
     // object
     // immediate function
@@ -473,7 +587,7 @@ export const parse = (tokens: Token[]) => {
     // id
     // match??
     // parenthesized exp??
-    throw new Error('unimplemented')
+    throw new Error(`unexpected literal expression ${token?.category}`)
   }
 
   const parseNumberLiteral = (): NumberLiteral => {
@@ -481,49 +595,61 @@ export const parse = (tokens: Token[]) => {
   }
 
   const parseFormattedStringLiteral = (): FormattedStringLiteral => {
-    if (match('$')) {
-      const quoteType = match(Category.structure)?.lexeme
-
-      if (quoteType !== `'` && quoteType !== `"`) {
-        error(`formatted string must begin with one of either ' or "`, token?.line ?? 0, token?.column ?? 0)
-      }
-
-      const stringContents: (string | Expression)[] = []
-      while (!at(quoteType)) {
-        stringContents.push(parseStatement())
-      }
-
-      match(quoteType, true)
-
-      return new FormattedStringLiteral(stringContents)
+    match('$', true)
+    if (!atAny(["'", '"'])) {
+      match("'", true)
     }
-    error(`formatted string must start with $`, token?.line ?? 0, token?.column ?? 0)
+
+    let stringValue = []
+    const quoteType = match(Category.structure, true)?.lexeme
+
+    while (!at(quoteType)) {
+      if (at('{')) {
+        stringValue.push(parseExpression(matchUntil('}')))
+      }
+      stringValue.push(new StringLiteral(next()?.lexeme ?? ''))
+    }
+
+    match(quoteType, true)
+    return new FormattedStringLiteral(stringValue)
   }
 
   const parseStringLiteral = (): StringLiteral => {
-    const quoteType = match(Category.structure)?.lexeme
-
-    if (quoteType !== `'` && quoteType !== `"`) {
-      error(`string must begin with one of either ' or "`, token?.line ?? 0, token?.column ?? 0)
+    if (!atAny(["'", '"'])) {
+      match("'", true)
     }
 
-    const stringContents = match(Category.id)?.lexeme ?? ''
+    let stringValue = ''
+    const quoteType = match(Category.structure, true)?.lexeme
+
+    while (!at(quoteType)) {
+      stringValue += next()?.lexeme ?? ''
+    }
 
     match(quoteType, true)
-
-    return new StringLiteral(stringContents)
+    return new StringLiteral(stringValue)
   }
 
   const parseObjectLiteral = (): ObjectLiteral => {
     match('{', true)
-    tokens.unshift(new Token(Category.structure, ',', 0, 0))
+    skipWhitespace()
+    if (at('}')) {
+      match('}', true)
+      return new ObjectLiteral([])
+    }
+
+    prependToTokens(new Token(Category.structure, ',', 0, 0))
     const keyValuePairs: [StringLiteral, Expression][] = []
 
     while (!at('}')) {
       match(',', true)
+      skipWhitespace()
       const key = parseStringLiteral()
+      skipWhitespace()
       match(':', true)
+      skipWhitespace()
       keyValuePairs.push([key, parseExpression()])
+      skipWhitespace()
     }
 
     match('}', true)
@@ -532,12 +658,20 @@ export const parse = (tokens: Token[]) => {
 
   const parseListLiteral = (): ListLiteral => {
     match('[', true)
-    tokens.unshift(new Token(Category.structure, ',', 0, 0))
+    skipWhitespace()
+    if (at(']')) {
+      match(']', true)
+      return new ListLiteral([])
+    }
+
+    prependToTokens(new Token(Category.structure, ',', 0, 0))
     const expressions: Expression[] = []
 
     while (!at(']')) {
       match(',', true)
+      skipWhitespace()
       expressions.push(parseExpression())
+      skipWhitespace()
     }
 
     match(']', true)
@@ -551,7 +685,7 @@ export const parse = (tokens: Token[]) => {
       parameters.push(new Variable(match(Category.id, true)!.lexeme, true, false))
     } else {
       match('(', true)
-      tokens.unshift(new Token(Category.structure, ',', 0, 0))
+      prependToTokens(new Token(Category.structure, ',', 0, 0))
 
       while (!at(')')) {
         match(',', true)
@@ -565,13 +699,16 @@ export const parse = (tokens: Token[]) => {
 
     const functionStatements: Statement[] = []
     if (match('{')) {
+      skipWhitespace()
       while (!at('}')) {
         functionStatements.push(parseStatement())
+        skipWhitespace()
       }
 
       match('}', true)
     } else {
       match(returnKeyword)
+      skipWhitespace(false)
       functionStatements.push(parseReturnStatement(matchUntil('\n')))
     }
 
@@ -580,5 +717,3 @@ export const parse = (tokens: Token[]) => {
 
   return parseBlock()
 }
-
-parseFile()

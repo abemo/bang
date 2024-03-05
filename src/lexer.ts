@@ -12,9 +12,13 @@ export default function tokenizeFile() {
       throw err
     }
 
+    console.log('Lexer output:')
+
     for (const token of tokenize(data)) {
       console.log(token)
     }
+    
+    console.log()
   })
 }
 
@@ -28,7 +32,10 @@ const tokenizeLine = (line: string[], lineNumber: number, flags: { inComment: bo
   let fullStr = line.join('')
 
   for (let i = 0; i < line.length; ) {
-    while (/^[ \t]/.test(line[i])) i++
+    while (/^[ \t]/.test(line[i])) {
+      tokens.push(new Token(Category.whitespace, line[i], lineNumber + 1, i + 1))
+      i++
+    }
     let match
 
     if (`${line[i]}${line[i + 1]}` === '/*') {
@@ -43,7 +50,7 @@ const tokenizeLine = (line: string[], lineNumber: number, flags: { inComment: bo
 
     if (`${line[i]}${line[i + 1]}` === '//' || flags.inComment) break
     if (line[i] === '\n') {
-      tokens.push(new Token(Category.structure, line[i], lineNumber + 1, i + 1))
+      tokens.push(new Token(Category.whitespace, line[i], lineNumber + 1, i + 1))
       return tokens
     }
 
@@ -70,5 +77,3 @@ const tokenizeLine = (line: string[], lineNumber: number, flags: { inComment: bo
 
   return tokens
 }
-
-tokenizeFile()

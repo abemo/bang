@@ -38,6 +38,7 @@
 - Bug fix for parsing function calls (3/18/24)
   - Currently greedy matching the function name instead of parsing the entire expression as a call to that function
 - Set up parsing to allow repeated `.` or `[]` operator (3/20/24)
+- Set up parsing to allow assignment operators (3/20/24)
 
 ---
 

@@ -1,4 +1,5 @@
 export const assignmentOperator = '='
+export const arrow = '->'
 
 const equalityOperator = '=='
 const inequalityOperator = '!='
@@ -18,7 +19,7 @@ export const equalityOperators = [
 export const orOperator = '||'
 export const andOperator = '&&'
 
-const addOperator = '+'
+export const addOperator = '+'
 export const subtractOperator = '-'
 export const additiveOperators = [addOperator, subtractOperator]
 
@@ -34,3 +35,28 @@ export const spreadOperator = '@'
 
 export const incrementOperator = '++'
 export const decrementOperator = '--'
+
+export const spreadAssignmentOperator = `${spreadOperator}${assignmentOperator}`
+export const negateAssignmentOperator = `${negateOperator}${assignmentOperator}`
+export const exponentialAssignmentOperator = `${exponentialOperator}${assignmentOperator}`
+export const multiplyAssignmentOperator = `${multiplyOperator}${assignmentOperator}`
+export const divideAssignmentOperator = `${divideOperator}${assignmentOperator}`
+export const modulusAssignmentOperator = `${modulusOperator}${assignmentOperator}`
+export const addAssignmentOperator = `${addOperator}${assignmentOperator}`
+export const subtractAssignmentOperator = `${subtractOperator}${assignmentOperator}`
+export const andAssignmentOperator = `${andOperator}${assignmentOperator}`
+export const orAssignmentOperator = `${orOperator}${assignmentOperator}`
+
+export const assignmentOperators = [
+  assignmentOperator,
+  spreadAssignmentOperator,
+  negateAssignmentOperator,
+  exponentialAssignmentOperator,
+  multiplyAssignmentOperator,
+  divideAssignmentOperator,
+  modulusAssignmentOperator,
+  addAssignmentOperator,
+  subtractAssignmentOperator,
+  andAssignmentOperator,
+  orAssignmentOperator,
+]

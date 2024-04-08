@@ -38,14 +38,10 @@ import {
 } from './core/operators'
 import { parse } from './parser'
 import { tokenize } from './lexer'
+import { falseKeyword, trueKeyword } from './core/keywords'
 
-export default function runFile() {
-  if (process.argv.length < 3) {
-    console.log(`Usage: ts-node ${process.argv[1]} <filename.bang>`)
-    process.exit(1)
-  }
-
-  fs.readFile(process.argv[2], 'utf8', (err, data) => {
+export default function runFile(fileName: string) {
+  fs.readFile(fileName, 'utf8', (err, data) => {
     if (err) {
       throw err
     }
@@ -87,11 +83,6 @@ export const run = (program: Block) => {
 
     if (expression instanceof NaryExpression) {
       return interpretNaryExpression(expression)
-    }
-
-    if (isLiteral(expression)) {
-      console.log(`found literal value ${getLiteralValue(expression)}`)
-      return getLiteralValue(expression)
     }
 
     return expression
@@ -147,10 +138,8 @@ export const run = (program: Block) => {
   const runCallExpression = (expression: CallExpression): Expression => {
     const [operand, args] = [expression.operand, expression.args]
     if (operand instanceof Variable) {
-      if (operand.id === 'print') {
-        console.log(runStatement(args[0]).srcCode().value)
-
-        // TODO allow multiple args
+      if (operand.id === 'prt') {
+        console.log(args.map(arg => getPrtValue(runStatement(arg))).join(' '))
 
         // const output: string[] = []
         // args.forEach(arg => {
@@ -382,12 +371,11 @@ export const run = (program: Block) => {
     return new StringLiteral(expression.constructor.type ?? nil.srcCode().value)
   }
 
-  const getLiteralValue = (expression: Literal) => {
-    if (
-      expression instanceof BooleanLiteral ||
-      expression instanceof NumberLiteral ||
-      expression instanceof StringLiteral
-    ) {
+  const getPrtValue = (expression: Literal) => {
+    if (expression instanceof BooleanLiteral) {
+      return expression.value ? trueKeyword : falseKeyword
+    }
+    if (expression instanceof NumberLiteral || expression instanceof StringLiteral) {
       return expression.value
     }
 

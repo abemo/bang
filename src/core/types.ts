@@ -1,6 +1,9 @@
+import { isEqual } from '../interpreter'
 import { Expression, StatementExpression, Variable } from './core'
 
-export interface Literal extends Expression {}
+export interface Literal extends Expression {
+  bool: BooleanLiteral
+}
 
 export const isLiteral = (expression: any): expression is Literal => {
   return (
@@ -14,17 +17,20 @@ export const isLiteral = (expression: any): expression is Literal => {
   )
 }
 
-export const isBooleanLiteral = (expression: any): expression is BooleanLiteral => {
-  return expression instanceof BooleanLiteral
-}
-// TODO
-
 export class BooleanLiteral implements Literal {
   constructor(public value: boolean) {}
 
   static type = 'bool'
 
   srcCode = () => new StringLiteral(this.value ? 'T' : 'F')
+
+  not = (): BooleanLiteral => {
+    return new BooleanLiteral(!this.value)
+  }
+
+  get bool() {
+    return this
+  }
 }
 
 export class NumberLiteral implements Literal {
@@ -33,6 +39,10 @@ export class NumberLiteral implements Literal {
   static type = 'num'
 
   srcCode = () => new StringLiteral(String(this.value))
+
+  get bool() {
+    return new BooleanLiteral(this.value !== 0)
+  }
 }
 
 export class StringLiteral implements Literal {
@@ -41,6 +51,10 @@ export class StringLiteral implements Literal {
   static type = 'str'
 
   srcCode = () => this
+
+  get bool() {
+    return new BooleanLiteral(this.value.length > 0)
+  }
 }
 
 export class FormattedStringLiteral implements Literal {
@@ -54,6 +68,10 @@ export class FormattedStringLiteral implements Literal {
         .map(expression => (expression instanceof StringLiteral ? expression.value : `{${expression.srcCode()}}`))
         .join('')
     )
+
+  get bool() {
+    return new BooleanLiteral(this.value.length > 0)
+  }
 }
 
 export class ObjectLiteral implements Literal {
@@ -63,6 +81,10 @@ export class ObjectLiteral implements Literal {
 
   srcCode = () =>
     new StringLiteral(`{ ${this.value.map(([key, val]) => `${key.value}: ${val.srcCode()}`).join(', ')} }`)
+
+  get bool() {
+    return new BooleanLiteral(this.value.length > 0)
+  }
 }
 
 export class ListLiteral implements Literal {
@@ -71,6 +93,56 @@ export class ListLiteral implements Literal {
   static type = 'list'
 
   srcCode = () => new StringLiteral(`[${this.value.map(val => val.srcCode()).join(', ')}]`)
+
+  get = (index: NumberLiteral): Expression => {
+    return this.value[index.value] ?? nil
+  }
+
+  idxOf = (expression: Expression): NumberLiteral => {
+    return new NumberLiteral(this.value.findIndex(e => isEqual(e, expression)))
+  }
+
+  has = (expression: Expression): BooleanLiteral => {
+    return new BooleanLiteral(this.idxOf(expression).value > -1)
+  }
+
+  delIdx = (index: NumberLiteral): BooleanLiteral => {
+    if (index.value > -1 && index.value < this.value.length) {
+      this.value.splice(index.value, 1)
+      return new BooleanLiteral(true)
+    }
+
+    return new BooleanLiteral(false)
+  }
+
+  del = (expression: Expression): BooleanLiteral => {
+    return this.delIdx(this.idxOf(expression))
+  }
+
+  prepend = (expression: Expression): void => {
+    this.value.unshift(expression)
+  }
+
+  add = (expression: Expression): void => {
+    this.value.push(expression)
+  }
+
+  flat = (): ListLiteral => {
+    return new ListLiteral(
+      this.value.reduce((acc: Expression[], expression) => {
+        if (expression instanceof ListLiteral) {
+          expression.value.forEach(e => acc.push(e))
+        } else {
+          acc.push(expression)
+        }
+        return acc
+      }, [])
+    )
+  }
+
+  get bool() {
+    return new BooleanLiteral(this.value.length > 0)
+  }
 }
 
 export class FunctionLiteral implements Literal {
@@ -87,9 +159,16 @@ export class FunctionLiteral implements Literal {
         .map(statement => statement.srcCode())
         .join('\n\t')}\n}`
     )
+
+  get bool() {
+    return new BooleanLiteral(this.parameters.length > 0 && this.statements.length > 0)
+  }
 }
 
 export const nil = {
   type: 'nil',
   srcCode: () => new StringLiteral('nil'),
+  bool: () => new BooleanLiteral(false),
 }
+
+export const inf = new NumberLiteral(Infinity)

@@ -1,0 +1,32 @@
+
+Evaluation and Feedback
+CMSI 4072 project ~ Spring 2024
+Natalie Lau
+BANG! Computer Language project
+Evaluation for homework03
+===============================
+
+7-1  Fix comments for Euclid's Algorithm        5 out of 5 points
+7-2  Two conditions for bad comments            4 out of 4 points
+7-4  Apply offensive programming ex.3           5 out of 5 points
+7-5  Should you add error handling?             4 out of 4 points
+7-7  Top-down drive to market / assumptions     5 out of 5 points
+8-1  Implementation of IsRelativelyPrime        5 out of 5 points
+8-3  Which testing methods used in 8-1 [gimme]  5 out of 5 points
+8-5  Implementation of AreRelativelyPrime       4 out of 4 points
+8-9  Exhaustive is black/white/gray & why       4 out of 4 points
+8-11 Lincoln estimate / number bugs             5 out of 5 points
+8-12 Lincoln estimate no common bugs            4 out of 4 points
+
+Total possible score: 50 points
+============================================================================
+
+Your score: 50 out of 50 = 100% which is an A-plus
+
+Comments/feedback:
+
+Perfect job on this assignment, as usual... YOU ROCK!!
+
+It has been a great pleasure to have you in my classes over the years, and I
+look forward to hearing from you as you make your marks upon the world and the
+industry.  Keep up the good work!
